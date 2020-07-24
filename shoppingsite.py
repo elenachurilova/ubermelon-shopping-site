@@ -6,13 +6,13 @@ put melons in a shopping cart.
 Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
+
 import jinja2
 
 import melons
 
 app = Flask(__name__)
-
 # A secret key is needed to use Flask sessioning features
 app.secret_key = 'this-should-be-something-unguessable'
 
@@ -100,7 +100,15 @@ def add_to_cart(melon_id):
     # - flash a success message
     # - redirect the user to the cart page
 
-    return "Oops! This needs to be implemented!"
+    session['cart'] = session.get('cart', {})
+
+    if melon_id in session['cart']:
+        session['cart'][melon_id] += 1
+    else:
+        session['cart'][melon_id] = 1
+    flash("The item was successfully added to your cart")
+
+    return redirect("/cart")
 
 
 @app.route("/login", methods=["GET"])
@@ -131,6 +139,7 @@ def process_login():
     #   message and redirect the user to the "/melons" route
     # - if they don't, flash a failure message and redirect back to "/login"
     # - do the same if a Customer with that email doesn't exist
+
 
     return "Oops! This needs to be implemented"
 
